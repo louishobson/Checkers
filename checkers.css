@@ -1,0 +1,88 @@
+/*
+ * Copyright (C) 2020 Louis Hobson <louis-hobson@hotmail.co.uk>. All Rights Reserved.
+ * 
+ * Distributed under MIT licence as a part of experiments into game-playing AI
+ * For details, see: https://github.com/louishobson/BoardGames/blob/master/LICENSE
+ *
+ * checkers.css
+ *
+ * styles for checkers.html
+ *
+ */
+
+
+
+/* checkers board properties */
+#checkers-board
+{
+    /* no boarder spacing */
+    border-spacing: 0;
+
+    /* set alignment to be centred */
+    margin-left: auto;
+    margin-right: auto;
+
+    /* make the table unselectable */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+/* checkers board header properties */
+#checkers-board th
+{
+    /* set font size */
+    font-size: 2em;
+}
+
+/* checkers board cell properties */
+#checkers-board td
+{
+    /* set border width and color */
+    border: 0.5px solid black;
+}
+
+/* joint checkers board header and cell properties */
+#checkers-board th, td
+{
+    /* set the dimensions of each square */
+    width: 3em; height: 3em;
+}
+
+/* light and dark classes of checkers board cells */
+#checkers-board .l
+{
+    /* set background color to white */
+    background-color: white;
+}
+#checkers-board .d
+{
+    /* set background color to black */
+    background-color: black;
+}
+
+/* checkers piece properties */
+.checkers-piece
+{
+    /* set display to block */
+    display: block;
+
+    /* fill cell */
+    width: 100%;
+}
+
+/* checkers choice piece properties */
+.checkers-choice-piece
+{
+    /* set display to block */
+    display: block;
+
+    /* slightly smaller than cell */
+    width: 50%;
+
+    /* set margins so that the non-100% width is centred */
+    margin-left: auto;
+    margin-right: auto;
+}
+
