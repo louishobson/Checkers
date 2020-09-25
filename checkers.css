@@ -12,77 +12,177 @@
 
 
 
-/* checkers board properties */
-#checkers-board
+/* import checkers_board.css */
+@import "./checkers_board.css";
+
+
+
+/* BODY */
+
+
+
+/* set body properties */
+body
 {
-    /* no boarder spacing */
-    border-spacing: 0;
+    /* set font family */
+    font-family: Arial, Helvetica, sans-serif;
 
-    /* set alignment to be centred */
-    margin-left: auto;
-    margin-right: auto;
-
-    /* make the table unselectable */
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
+    /* set to have no margin */
+    margin: 0;
 }
 
-/* checkers board header properties */
-#checkers-board th
+
+
+/* INFO PANNEL AND LEFT RIGHT AND MIDDLE SECTIONS */
+
+
+
+/* checkers info div */
+#checkers-control
 {
+    /* set width and height */
+    width: 68vmin; height: 10vmin;
+
+    /* make centred */
+    margin-left: auto; margin-right: auto;
+
+    /* small margin */
+    margin-top: 4vmin;
+
+    /* align text to centre */
+    text-align: center;
+}
+
+/* checkers info left center and right */
+#checkers-control-left   { float: left; }
+#checkers-control-center { float: center; }
+#checkers-control-right  { float: right; display: grid; }
+
+
+
+/* LEFT AND RIGHT CONTROLS */
+
+
+
+/* buttons and options */
+#checkers-control-stopstart, #checkers-control-player-select
+{
+    /* set size */
+    width: 14vmin; height: 4vmin;
+
     /* set font size */
-    font-size: 2em;
-}
+    font-size: 2vmin;
+    font-weight: normal;
 
-/* checkers board cell properties */
-#checkers-board td
-{
-    /* set border width and color */
-    border: 0.5px solid black;
-}
+    /* border and radius */
+    border: 1px solid black;
+    border-radius: 2vmin;
 
-/* joint checkers board header and cell properties */
-#checkers-board th, td
-{
-    /* set the dimensions of each square */
-    width: 3em; height: 3em;
-}
+    /* no outline */
+    outline: none;
 
-/* light and dark classes of checkers board cells */
-#checkers-board .l
-{
-    /* set background color to white */
+    /* background color */
     background-color: white;
 }
-#checkers-board .d
+
+#checkers-control-stopstart:hover,  #checkers-control-player-select:hover
 {
-    /* set background color to black */
-    background-color: black;
+    /* make text slightly transparent */
+    opacity: 0.6;
 }
 
-/* checkers piece properties */
-.checkers-piece
+/* control button */
+#checkers-control-stopstart
 {
-    /* set display to block */
-    display: block;
-
-    /* fill cell */
-    width: 100%;
+    /* small margin */
+    margin-top: 3vmin;
+    margin-left: 1vmin;
+    margin-bottom: 0;
 }
 
-/* checkers choice piece properties */
-.checkers-choice-piece
+/* player selection */
+#checkers-control-player-select
 {
-    /* set display to block */
-    display: block;
+    /* grid row one */
+    grid-row: 1;
 
-    /* slightly smaller than cell */
-    width: 50%;
-
-    /* set margins so that the non-100% width is centred */
-    margin-left: auto;
-    margin-right: auto;
+    /* small margin */
+    margin-top: 0.5vmin;
+    margin-right: 1vmin;
+    margin-bottom: 0;
 }
 
+/* difficulty slider */
+#checkers-control-oppdifficulty
+{
+    /* set size */
+    width: 14vmin; height: 4vmin;
+
+    /* grid row two */
+    grid-row: 2;
+
+    /* small margin */
+    margin-top: 0.5vmin;
+    margin-right: 1vmin;
+    margin-bottom: 0;
+}
+
+/* difficulty text */
+#checkers-control-oppdifficulty-text
+{
+    /* grid row three */
+    grid-row: 3;
+
+    /* small margin */
+    margin-top: 0;
+    margin-bottom: 0;
+
+    /* set font size */
+    font-size: 1.5vmin;
+    font-weight: normal;
+    font-style: italic;
+}
+
+
+
+/* MIDDLE INFO */
+
+
+
+/* player's turn text */
+#checkers-player-turn
+{
+    /* margin */
+    margin-bottom: 2vmin;
+
+    /* set font size */
+    font-size: 4vmin;
+    font-weight: bold;
+}
+
+/* extra text for player's turn */
+#checkers-player-turn-extra
+{
+    /* set font size */
+    font-size: 2vmin;
+    font-weight: normal;
+}
+
+
+
+/* BOARD ANCHOR */
+
+
+
+/* checkers anchor point */
+#checkers-board-anchor
+{
+    /* to to fill window */
+    width: 85vmin; height: 85vmin;
+
+    /* centre the div */
+    margin: auto;
+
+    /* set font based on vmin */
+    font-size: 3vmin;
+}
