@@ -5,9 +5,6 @@
     Distributed under MIT licence as a part of experiments into game-playing AI
     For details, see: https://github.com/louishobson/BoardGames/blob/master/LICENSE
 
-    checkers.html
-
-    the main html document for playing checkers
 
 -->
 
@@ -15,9 +12,11 @@
 
 <html>
 
+    <!-- header -->
+
     <head>
 
-        <!-- <link rel="icon" href="favicon.ico" /> -->
+        <!-- meta tags -->
 
         <meta name="author" content="Louis Hobson" />
         <meta name="description" content="Checkers" />
@@ -27,126 +26,77 @@
         <meta name="theme-color" content="#ffffff" />
 
 
-
-        <script src="checkers.js"></script>
-
-        <link rel="stylesheet" href="checkers.css" />
+        <!-- styles for checkers -->
+        <link rel="stylesheet" href="./checkers.css" />
 
 
-
+        <!-- title -->
         <title>Checkers</title>
 
     </head>
 
 
 
+    <!-- body -->
+
     <body>
 
-        <table id="checkers-board">
+        <!-- div to contain information/control options about the current game (e.g.) who's move it is -->
+        <div id="checkers-control">
 
-            <tr> 
-                <th></th>
-                <th>a</th>
-                <th>b</th>
-                <th>c</th>
-                <th>d</th>
-                <th>e</th> 
-                <th>f</th>
-                <th>g</th>
-                <th>h</th>
-            </tr>
-            <tr> 
-                <th>8</th>
-                <td           class="l"></td>
-                <td id="c-07" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-17" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-27" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-37" class="d"></td>
-            </tr>
-            <tr> 
-                <th>7</th>
-                <td id="c-06" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-16" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-26" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-36" class="d"></td>
-                <td           class="l"></td>
-            </tr>
-            <tr> 
-                <th>6</th>
-                <td           class="l"></td>
-                <td id="c-05" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-15" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-25" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-35" class="d"></td>
-            </tr>
-            <tr> 
-                <th>5</th>
-                <td id="c-04" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-14" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-24" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-34" class="d"></td>
-                <td           class="l"></td>
-            </tr>
-            <tr> 
-                <th>4</th>
-                <td           class="l"></td>
-                <td id="c-03" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-13" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-23" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-33" class="d"></td>
-            </tr>
-            <tr> 
-                <th>3</th>
-                <td id="c-02" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-12" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-22" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-32" class="d"></td>
-                <td           class="l"></td>
-            </tr>
-            <tr> 
-                <th>2</th>
-                <td           class="l"></td>
-                <td id="c-01" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-11" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-21" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-31" class="d"></td>
-            </tr>
-            <tr> 
-                <th>1</th>
-                <td id="c-00" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-10" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-20" class="d"></td>
-                <td           class="l"></td>
-                <td id="c-30" class="d"></td>
-                <td           class="l"></td>
-            </tr>
+            <div id="checkers-control-left">
 
-        </table>
+                <!-- button to start/restart the game -->
+                <button id="checkers-control-stopstart">Start</button>
+
+            </div>
+
+            <div id="checkers-control-right">
+
+                <!-- no. of players selection -->
+                <select id="checkers-control-player-select">
+                    <option value="white" selected>You play white</option>
+                    <option value="black">You play black</option>
+                    <option value="twoplayer">Two player</option>
+                </select>
+                <!-- slider for opponent difficulty -->
+                <input id="checkers-control-oppdifficulty" type="range" min="1" max="15" step="1" value="10" />
+                <p id="checkers-control-oppdifficulty-text">Opponent difficulty: 10</p>
+
+            </div>
+
+            <div id="checkers-control-center">
+
+                <!-- who's turn it is -->
+                <p id="checkers-player-turn">Checkers</p>
+                <!-- extra info about their turn -->
+                <p id="checkers-player-turn-extra">Click start to begin</p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- div which will be used to insert the checkers board into -->
+        <div id="checkers-board-anchor"></div>
+
+
+
+        </div>
 
     </body>
+
+
+
+    <!-- footer -->
+
+    <footer>
+
+        <!-- checkers script -->
+        <script type="module" src="./checkers.js"></script>
+
+    </footer>
 
 
 </html>
