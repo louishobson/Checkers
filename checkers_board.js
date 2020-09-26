@@ -53,6 +53,16 @@ export class checkers_board
         4
     ]
 
+    /* map of piece ids to booleans as to whether they are double pieces */
+    static map_piece_id_to_is_double = 
+    [
+        undefined,
+        false,
+        false,
+        true,
+        true
+    ];
+
 
 
     /* MEMBERS */
