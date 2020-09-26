@@ -65,10 +65,11 @@ async function continue_game ( player )
     document.getElementById ( "checkers-player-turn" ).innerHTML = ( player ? "White's" : "Black's" ) + " turn";
     document.getElementById ( "checkers-player-turn-extra" ).innerHTML = "";
 
-    /* get the actions for the player */
+    /* get the actions for the player and the board utility */
     let actions = game.get_player_actions ( player );
+    let utility = game.estimate_utility ();
 
-    /* if player must capture, alter extra text */
+    /* display that a capture must be made */
     if ( actions.length != 0 && actions [ 0 ].capture_piece != checkers_board.piece_id.empty_cell )
         document.getElementById ( "checkers-player-turn-extra" ).innerHTML = "Player must capture";
 
@@ -108,6 +109,8 @@ function end_of_game ( player )
 {
     /* set end game when possible to false */
     end_game_when_possible = false;
+
+    console.log ( game.pieces_in_play );
 
     /* change text above the board */
     document.getElementById ( "checkers-player-turn" ).innerHTML = ( player == undefined ? "Game ended" : ( player ? "White wins" : "Black wins" ) );
