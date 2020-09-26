@@ -211,10 +211,13 @@ export class checkers_game extends checkers_board
             further_actions: [],
         };
 
-        /* set further_actions */
-        this.apply_action ( action, false );
-        this.get_piece_actions ( end_pos, action.further_actions, true );
-        this.unapply_action ( action, false );
+        /* set further_actions only if did not just become a king */
+        if ( action.start_piece == action.end_piece )
+        {
+            this.apply_action ( action, false );
+            this.get_piece_actions ( end_pos, action.further_actions, true );
+            this.unapply_action ( action, false );
+        }
 
         /* return action */
         return action;
@@ -392,144 +395,133 @@ export class checkers_game extends checkers_board
 
     /* estimate_utility
      *
-     * gets a value for the utility of the board layout through the difference between the player utilities
+     * gets a value for the utility of the board layout
      * a positive value favours white
+     * 
+     * single pieces have a value ranging from S0 to S1 using the formula:
+     * 
+     *      v = S0 + ( S1 - S0 ) * ( dist_from_back_row / 7 ) ^ Sp
+     * 
+     * where on the back row they have a value of S0, and on the opposite end they would theoretically have a value of S1 (but they have become double pieces so this formula no longer applies)
+     * the value of Sp will cause the interpolation between S0 and S1 to accelerate or decelerate
+     * deceleration is better (Sp < 1) since there will be a greater change in v for further back pieces, prompting them to catch up with those in front
+     * 
+     * a similar formula is used for double pieces:
+     * 
+     *      v = D0 + ( D1 - D0 ) * ( dist_from_nearest_edge / 3 ) ^ Dp
+     * 
+     * this means that when on an edge, they have a value of D0, and when in any of the centre 4 cells, a value of D1
+     * again, Dp will cause the interpolation to accelerate
+     * it should be true that D0 > S1, since otherwise getting a piece kinged will be seen as a disadvantage
+     * the difference between D0 and D1 should also not be too large, since otherwise double pieces will be uninclined to move outwards to aid capture
+     * the purpose of this formula is that being near an edge makes the double piece both less useful and vaunerable to capture, since its movement options become limited
+     * a decelerating function (Dp < 1) is better, so that the penalty is only too great when actually on the edge, and not when moving around to capture
+     * 
+     * some further bonuses are applied for traits of the board
+     * 
+     * when a single piece is being protected from behind by friendly pieces, the following bonus formula is used:
+     * 
+     *      b = 0,  if no protection
+     *      b = P0, if backed up by one piece
+     *      b = P1, if backed up by two pieces
+     * 
+     * being backed up makes a piece less likely to be captured, and also encourages further back pieces to catch up with those which have moved forwards
+     * 
+     * there is also a bonus for how many single pieces you have left on the back row:
+     * 
+     *      b = B0 * ( num_pieces_on_back_row / 4 ) ^ Bp
+     * 
+     * where a full back row gives a bonus of B0, and an empty back row gives no bonus
+     * a full back row means that the opposing player can not easily aquire double pieces, which is obviously a good thing for this player
+     * the function should be accelerating (Bp > 1), since the value of keeping a back row quicly deteriorates as pieces leave it
+     * for example, the value of having one single piece on the back row is very small, and it should not be seen as a huge loss to move it forwards, compared to breaking a full back row
+     * 
      */
     estimate_utility ()
     {   
-        /* return the difference between the individual utilities */
-        return this.estimate_player_utility ( true ) - this.estimate_player_utility ( false );
-    }
-
-    /* estimate_player_utility
-     *
-     * estimate the utility for a player
-     */
-    estimate_player_utility ( player )
-    {
         /* return immediately if a win state */
         let win_status = this.get_win_status ();
-        if ( win_status == player  ) return Infinity;
-        if ( win_status == !player ) return -Infinity;
+        if ( win_status == true  ) return Infinity;
+        if ( win_status == false ) return -Infinity;
 
-        /* let utility start as 0 */
+
+
+        /* define constants described above */
+        let S0 = 2, S1 = 3.5, Sp = 0.66;
+        let D0 = 5, D1 = 6, Dp = 0.66;
+        let P0 = 1, P1 = 3;
+        let B0 = 12, Bp = 2.0;
+
+
+
+        /* uttility starts at 0 */
         let utility = 0;
 
-
-        
-        /* STRATEGY A: AIM FOR DOUBLE PIECES
-         *
-         * this strategy is used if there are some single pieces
-         *
-         * a single piece's value is a decelerating function of its distance from the edge:
-         * 
-         *      v = S + ( D - S ) * ( dist / 7.0 ) ^ 0.66
-         * 
-         * where S is the value of a single piece on the edge, and D is the value of a double piece the moment it is crowned
-         * the use of a decelerating function will prompt further back pieces to catch up with those in front
-         * 
-         * a double piece is currently left at a constant value of D
-         * 
-         * a bonus is rewarded for a single piece being backed up by a piece behind it
-         * the number of pieces backing it up defines the bonus:
-         * 
-         *      1: bonus of 1
-         *      2: bonus of 3
-         * 
-         * a bonus is also given by the number of pieces in the back row, mapped by an accelerating function:
-         * 
-         *      v = B * ( num_pcs / 4.0 ) ^ Bp
-         * 
-         * where B is a constant and P is defined by
-         * 
-         *      Bp = ( log S/B ) / ( log 1/4 )
-         * 
-         * since this Bp will give S when num_pcs == 1 
-         *
-         * 
-         * 
-         * STRATEGY B: KILL OFF THE OTHER PLAYER
-         * 
-         * once the player has all kings, they should aim to kill the other player
-         * 
-         */
-
-        /* the constants described above */
-        let S = 1.0;
-        let D = 6.0;
-        let B = 16.0;
-        let Bp = 2.0; //Math.log ( S / B ) / Math.log ( 0.25 );
+        /* count the no. of back row pieces */
+        let white_back_row_pieces = 0, black_back_row_pieces = 0;
 
 
 
-        /* check that there are some non-kings left */
-        if ( this.pieces_in_play [ player ? checkers_board.piece_id.white_single : checkers_board.piece_id.black_single ] != 0 )
+        /* loop through the board */
+        for ( let pos = 0; pos < 32; ++pos )
         {
+            /* get the piece and the player of the piece */
+            let piece = this.board_layout [ pos ];
+            let player = checkers_board.map_piece_id_to_player [ piece ];
 
+            /* if an empty cell, continue */
+            if ( player == undefined ) continue;
 
-            /* number of edge pieces */
-            let edge_pieces = 0;
+            /* set the variable sign to be +1 for white piece and -1 for black piece */
+            let sign = ( player ? +1 : -1 );
 
-            /* loop through board */
-            for ( let pos = 0; pos < 32; ++pos ) 
+            /* switch for if is a single or double piece */
+            if ( !checkers_board.map_piece_id_to_is_double [ piece ] )
             {
-                /* get piece */
-                let piece = this.board_layout [ pos ];
+                /* is a single piece, so get distance from edge and whether is on an odd row */
+                let dist_from_back_row = Math.floor ( pos / 4.0 );
+                let odd_row = dist_from_back_row % 2;
+                if ( !player ) dist_from_back_row = 7 - dist_from_back_row;
 
-                /* continue if not the correct player */
-                if ( player != checkers_board.map_piece_id_to_player [ piece ] ) continue;
+                /* get the number of friendly pieces backing this piece up */
+                let protection = 0;
+                if ( player ) protection += ( player == checkers_board.map_piece_id_to_player [ this.board_layout [ pos - 5 + odd_row ] ] ) + ( player == checkers_board.map_piece_id_to_player [ this.board_layout [ pos - 4 + odd_row ] ] );
+                else protection += ( player == checkers_board.map_piece_id_to_player [ this.board_layout [ pos + 3 + odd_row ] ] ) + ( player == checkers_board.map_piece_id_to_player [ this.board_layout [ pos + 4 + odd_row ] ] );
 
-                /* switch for whether a double or single piece */
-                if ( piece == ( player ? checkers_board.piece_id.white_single : checkers_board.piece_id.black_single ) )
-                {
-                    /* get the distance from the edge */
-                    let dist_from_edge = Math.floor ( pos / 4.0 );
-                    if ( !player ) dist_from_edge = 7 - dist_from_edge;
+                /* apply piece value to board utility */
+                utility += sign * ( S0 + ( S1 - S0 ) * Math.pow ( dist_from_back_row / 7.0, Sp ) );
 
-                    /* if on back row, increment edge_pieces */
-                    if ( dist_from_edge == 0 ) ++edge_pieces;
+                /* apply protection bonus to board utility */
+                if ( protection == 1 ) utility += sign * P0; else
+                if ( protection == 2 ) utility += sign * P1;
 
-                    /* get whether odd row */
-                    let odd_row = ( Math.floor ( pos / 4.0 ) % 2 );
+                /* increment no. of back row pieces if on back row */
+                if (  player && dist_from_back_row == 0 ) ++white_back_row_pieces; else
+                if ( !player && dist_from_back_row == 0 ) ++black_back_row_pieces;
+            } else
+            {
+                /* is a double piece, so get the distance from the nearest edge */
+                let dist_from_nearest_edge = Math.min 
+                (
+                    /* left */ pos % 4,
+                    /* right */ 3 - ( pos % 4 ),
+                    /* down */ Math.floor ( pos / 4.0 ),
+                    /* up */ 7 - Math.floor ( pos / 4.0 )
+                );
 
-                    /* get the number of backup pieces */
-                    let backup = ( player ?
-                        ( checkers_board.map_piece_id_to_player [ this.board_layout [ pos - 5 + odd_row ] ] == player ) + ( checkers_board.map_piece_id_to_player [ this.board_layout [ pos - 4 + odd_row ] ] == player ) :
-                        ( checkers_board.map_piece_id_to_player [ this.board_layout [ pos + 3 + odd_row ] ] == player ) + ( checkers_board.map_piece_id_to_player [ this.board_layout [ pos + 4 + odd_row ] ] == player ) );
-
-                    /* add value to utility from piece position */
-                    utility += S + ( D - S ) * Math.pow ( dist_from_edge / 7.0, 0.66 );
-
-                    /* add value to utility from backup pieces */
-                    if ( backup == 1 ) utility += 1; else
-                    if ( backup == 2 ) utility += 3;
-                } else
-                {
-                    /* apply a constant utility bonus */
-                    utility += D;
-                }
+                /* apply piece value to board utility */
+                utility += sign * ( D0 + ( D1 - D0 ) * Math.pow ( dist_from_nearest_edge / 3.0, Dp ) );
             }
-
-            /* apply edge piece bonus */
-            utility += B * Math.pow ( edge_pieces / 4.0, Bp );
-
-
-        } else
-
-        
-
-        {
-
-
-            
-            utility += this.pieces_in_play [ player ? checkers_board.piece_id.white_double : checkers_board.piece_id.black_double ] * 6;
-
-
         }
 
+        /* add both players' back row bonuses */
+        utility += B0 * ( Math.pow ( white_back_row_pieces / 4.0, Bp ) - Math.pow ( black_back_row_pieces / 4.0, Bp ) );
+
+        
 
         /* return utility */
         return utility;
+
     }
 
 
@@ -613,7 +605,7 @@ export class checkers_game extends checkers_board
     /* dragstart callback for piece */
     checkers_piece_dragstart_handler ( ev )
     {
-        /* set data to be actions */
+        /* set data */
         ev.dataTransfer.setData ( "text/plain",  JSON.stringify ( { player: ev.target.checkers_player,  actions: ev.target.checkers_actions, is_promise: ev.target.checkers_is_promise } ) );
     }
 
