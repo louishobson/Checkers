@@ -158,7 +158,7 @@ export class checkers_game extends checkers_board
      *      end_piece/pos: the piece_id and position of the piece after it has been moved
      *      capture_piece: always equal to checkers_board.piece_id.empty_cell
      * 
-     * i, j, k, l function parameters mean the same as in the action object
+     * start_pos and end_pos function parameters mean the same as in the action object
      */
     create_non_capture_action ( start_pos, end_pos )
     {
@@ -191,7 +191,7 @@ export class checkers_game extends checkers_board
      *      capture_piece/pos: the piece_id and position of the piece being captured
      *      further_actions: any further actions that must be completed after capture
      * 
-     * i, j, k, l, m, n function parameters mean the same as in the action object
+     * start_pos, end_pos and capture_pos function parameters mean the same as in the action object
      */
     create_capture_action ( start_pos, end_pos, capture_pos )
     {
