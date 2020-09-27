@@ -178,11 +178,27 @@ body
 #checkers-board-anchor
 {
     /* to to fill window */
-    width: 85vmin; height: 85vmin;
+    width: 82.5vmin; height: 82.5vmin;
 
     /* centre the div */
     margin: auto;
 
     /* set font based on vmin */
     font-size: 3vmin;
+}
+
+
+
+/* ABOUT LINK */
+
+
+
+/* about div */
+#checkers-about-div
+{
+    /* set hight */
+    height: 2.5vmin;
+
+    /* centre text */
+    text-align: center;
 }
