@@ -3,7 +3,7 @@ import { checkers_board } from "./checkers_board.js";
  * Copyright (C) 2020 Louis Hobson <louis-hobson@hotmail.co.uk>. All Rights Reserved.
  * 
  * Distributed under MIT licence as a part of experiments into game-playing AI
- * For details, see: https://github.com/louishobson/BoardGames/blob/master/LICENSE
+ * For details, see: https://github.com/louishobson/Checkers/blob/master/LICENSE
  *
  * checkers.js
  *
