@@ -1,10 +1,10 @@
 # Checkers #
 
-Experiments into using adversarial search for playing the simple two-player game Checkers (aka English Draughts)
+Experiments into using adversarial search for playing the simple two-player game Checkers (aka English Draughts).
 
 ## How to use ##
 
-Simply clone the master branch into a directory accessible from the web to play against the AI
+Simply clone the master branch into a directory accessible from the web to play against the AI.
 
 ## Rules of checkers ##
 
