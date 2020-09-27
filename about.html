@@ -1,0 +1,115 @@
+<!--
+
+    Copyright (C) 2020 Louis Hobson <louis-hobson@hotmail.co.uk>. All Rights Reserved.
+  
+    Distributed under MIT licence as a part of experiments into game-playing AI
+    For details, see: https://github.com/louishobson/BoardGames/blob/master/LICENSE
+
+    about.html
+
+    information about the rules of checkers and the AI
+
+-->
+
+
+
+<!DOCTYPE html>
+
+<html>
+
+    <!-- header -->
+
+    <head>
+
+        <!-- meta tags -->
+
+        <meta name="author" content="Louis Hobson" />
+        <meta name="description" content="Checkers" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+        <meta name="google" content="notranslate" />
+        <meta name="theme-color" content="#ffffff" />
+
+
+        <!-- styles -->
+        <link rel="stylesheet" href="./about.css" />
+
+
+        <!-- title -->
+        <title>About Checkers</title>
+
+    </head>
+
+
+
+    <!-- body -->
+
+    <body>
+
+        <!-- header div -->
+        <div id="about-header-div">
+
+            <!-- header text -->
+            <h1 id="about-header-text">Checkers Rules and About the AI</h>
+
+        </div>
+
+        <!-- main content div -->
+        <div id="about-main-content-div">
+
+            <!-- checkers rules div -->
+            <div id="about-rules-div" >
+
+                <!-- header -->
+                <h2 id="about-rules-title">Checkers rules</h2>
+
+                <!-- rules list -->
+                <ul id="about-rules-list">
+                    <li>
+                        Single pieces, or men, (what you begin with) may only move diagonally forwards (white up, black down) into an empty space (so only black cells will ever be occupied).
+                    </li>
+                    <li>
+                        Pieces are moved by yourself by clicking, holding and dragging the piece into it's new position. On your turn, only pieces that can move will be able to be clicked and dragged.
+                    </li>
+                    <li>
+                        If your piece reaches the opposite side of the board, it becomes a king and can now move (and capture) in any of the four diagonal directions.
+                    </li>
+                    <li>
+                        A capture is where a piece jumps over an opposing piece diagonally adjacent to it into an empty cell.
+                    </li>
+                    <li>
+                        If a capture is possible, it must be taken. If multiple captions are possible, it is your choice which one you chose to make. This is called forced capturing. Kings are not exempt from forced capturing.
+                    </li>
+                    <li>
+                        If, once a piece has made a capture, it is then possible for it to capture again from its new position, it must capture again. This is called a multi-capture. 
+                        A piece may not multi-capture after a move which resulted it in being kinged: it must wait until the next move to capture.
+                    </li>
+                    <li>
+                        A player wins if either the other player's pieces are completely irradicated, or the other player is unable to move.
+                    </li>
+                </ul>
+
+            </div>
+
+            <!-- about AI div -->
+            <div id="about-about-ai-div">
+
+                <!-- header -->
+                <h2 id="about-about-ai-title">About the AI</h2>
+
+                <!-- about ai text -->
+                <p id="about-about-ai-text">
+                    The AI is written in pure JavaScript, using the minimax search algorithm with alpha-beta pruning. For the current state, the comptuter player performs a depth-first seach on a tree of board states created from the possible 
+                    actions for each player's turn. Terminal nodes are determined wither by a win state, or a depth equal to the "player difficulty". The terminal nodes are assigned a value based on generic checkers strategy, where a high value 
+                    favoues white, and a low favoues black. Parent nodes are assigned the maximum value of the child nodes' values for white's turn, and the minimum for black's turn. After this search has reached back up to the root node, 
+                    the computer player will choose the action which leads to the node with the best assigned value (max for white min for black). The alpha-beta part is purely an optimisation which reduces the size of the search tree by 
+                    ignoring sections which will never be reached. As a heads up, there is currently no endgame database, so when there are only a few pieces left, it tends to act fairly irrationally.
+                </p>
+
+            </div>
+
+        </div>
+
+    </body>
+
+</html>

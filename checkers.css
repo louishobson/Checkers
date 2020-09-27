@@ -1,0 +1,204 @@
+/*
+ * Copyright (C) 2020 Louis Hobson <louis-hobson@hotmail.co.uk>. All Rights Reserved.
+ * 
+ * Distributed under MIT licence as a part of experiments into game-playing AI
+ * For details, see: https://github.com/louishobson/BoardGames/blob/master/LICENSE
+ *
+ * checkers.css
+ *
+ * styles for checkers.html
+ *
+ */
+
+
+
+/* import checkers_board.css */
+@import "./checkers_board.css";
+
+
+
+/* BODY */
+
+
+
+/* set body properties */
+body
+{
+    /* set font family */
+    font-family: Arial, Helvetica, sans-serif;
+
+    /* set to have no margin */
+    margin: 0;
+}
+
+
+
+/* INFO PANNEL AND LEFT RIGHT AND MIDDLE SECTIONS */
+
+
+
+/* checkers info div */
+#checkers-control
+{
+    /* set width and height */
+    width: 68vmin; height: 10vmin;
+
+    /* make centred */
+    margin-left: auto; margin-right: auto;
+
+    /* small margin */
+    margin-top: 4vmin;
+
+    /* align text to centre */
+    text-align: center;
+}
+
+/* checkers info left center and right */
+#checkers-control-left   { float: left; }
+#checkers-control-center { float: center; }
+#checkers-control-right  { float: right; display: grid; }
+
+
+
+/* LEFT AND RIGHT CONTROLS */
+
+
+
+/* buttons and options */
+#checkers-control-stopstart, #checkers-control-player-select
+{
+    /* set size */
+    width: 14vmin; height: 4vmin;
+
+    /* set font size */
+    font-size: 2vmin;
+    font-weight: normal;
+
+    /* border and radius */
+    border: 1px solid black;
+    border-radius: 2vmin;
+
+    /* no outline */
+    outline: none;
+
+    /* background color */
+    background-color: white;
+}
+
+#checkers-control-stopstart:hover,  #checkers-control-player-select:hover
+{
+    /* make text slightly transparent */
+    opacity: 0.6;
+}
+
+/* control button */
+#checkers-control-stopstart
+{
+    /* small margin */
+    margin-top: 3vmin;
+    margin-left: 1vmin;
+    margin-bottom: 0;
+}
+
+/* player selection */
+#checkers-control-player-select
+{
+    /* grid row one */
+    grid-row: 1;
+
+    /* small margin */
+    margin-top: 0.5vmin;
+    margin-right: 1vmin;
+    margin-bottom: 0;
+}
+
+/* difficulty slider */
+#checkers-control-oppdifficulty
+{
+    /* set size */
+    width: 14vmin; height: 4vmin;
+
+    /* grid row two */
+    grid-row: 2;
+
+    /* small margin */
+    margin-top: 0.5vmin;
+    margin-right: 1vmin;
+    margin-bottom: 0;
+}
+
+/* difficulty text */
+#checkers-control-oppdifficulty-text
+{
+    /* grid row three */
+    grid-row: 3;
+
+    /* small margin */
+    margin-top: 0;
+    margin-bottom: 0;
+
+    /* set font size */
+    font-size: 1.5vmin;
+    font-weight: normal;
+    font-style: italic;
+}
+
+
+
+/* MIDDLE INFO */
+
+
+
+/* player's turn text */
+#checkers-player-turn
+{
+    /* margin */
+    margin-bottom: 2vmin;
+
+    /* set font size */
+    font-size: 4vmin;
+    font-weight: bold;
+}
+
+/* extra text for player's turn */
+#checkers-player-turn-extra
+{
+    /* set font size */
+    font-size: 2vmin;
+    font-weight: normal;
+}
+
+
+
+/* BOARD ANCHOR */
+
+
+
+/* checkers anchor point */
+#checkers-board-anchor
+{
+    /* to to fill window */
+    width: 82.5vmin; height: 82.5vmin;
+
+    /* centre the div */
+    margin: auto;
+
+    /* set font based on vmin */
+    font-size: 3vmin;
+}
+
+
+
+/* ABOUT LINK */
+
+
+
+/* about div */
+#checkers-about-div
+{
+    /* set hight */
+    height: 2.5vmin;
+
+    /* centre text */
+    text-align: center;
+}

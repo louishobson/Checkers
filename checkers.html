@@ -3,11 +3,11 @@
     Copyright (C) 2020 Louis Hobson <louis-hobson@hotmail.co.uk>. All Rights Reserved.
   
     Distributed under MIT licence as a part of experiments into game-playing AI
-    For details, see: https://github.com/louishobson/GLHelper/blob/master/LICENSE
+    For details, see: https://github.com/louishobson/BoardGames/blob/master/LICENSE
 
     checkers.html
 
-    the main html document for playing checkers
+    main checkers HTML file
 
 -->
 
@@ -15,9 +15,11 @@
 
 <html>
 
+    <!-- header -->
+
     <head>
 
-        <!-- <link rel="icon" href="favicon.ico" /> -->
+        <!-- meta tags -->
 
         <meta name="author" content="Louis Hobson" />
         <meta name="description" content="Checkers" />
@@ -27,22 +29,84 @@
         <meta name="theme-color" content="#ffffff" />
 
 
+        <!-- styles for checkers -->
+        <link rel="stylesheet" href="./checkers.css" />
 
-        <link rel="stylesheet" href="checkers.css" />
 
-
-
+        <!-- title -->
         <title>Checkers</title>
 
     </head>
 
 
 
+    <!-- body -->
+
     <body>
 
+        <!-- div to contain information/control options about the current game (e.g.) who's move it is -->
+        <div id="checkers-control">
+
+            <div id="checkers-control-left">
+
+                <!-- button to start/restart the game -->
+                <button id="checkers-control-stopstart">Start</button>
+
+            </div>
+
+            <div id="checkers-control-right">
+
+                <!-- no. of players selection -->
+                <select id="checkers-control-player-select">
+                    <option value="white" selected>You play white</option>
+                    <option value="black">You play black</option>
+                    <option value="twoplayer">Two player</option>
+                </select>
+                <!-- slider for opponent difficulty -->
+                <input id="checkers-control-oppdifficulty" type="range" min="1" max="15" step="1" value="10" />
+                <p id="checkers-control-oppdifficulty-text">Opponent difficulty: 10</p>
+
+            </div>
+
+            <div id="checkers-control-center">
+
+                <!-- who's turn it is -->
+                <p id="checkers-player-turn">Checkers</p>
+                <!-- extra info about their turn -->
+                <p id="checkers-player-turn-extra">Click start to begin</p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- div which will be used to insert the checkers board into -->
+        <div id="checkers-board-anchor"></div></div>
+
+
+
+        <!-- div to hold link to about page -->
+        <div id="checkers-about-div">
+
+            <!-- link to about page -->
+            <a id="checkers-about-link" href="./about.html" target="_blank">About this site</a>
+
+        </div>
         
 
     </body>
+
+
+
+    <!-- footer -->
+
+    <footer>
+
+        <!-- checkers script -->
+        <script type="module" src="./checkers.js"></script>
+
+    </footer>
 
 
 </html>
