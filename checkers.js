@@ -1,4 +1,3 @@
-import { checkers_board } from "./checkers_board.js";
 /*
  * Copyright (C) 2020 Louis Hobson <louis-hobson@hotmail.co.uk>. All Rights Reserved.
  * 
@@ -15,10 +14,11 @@ import { checkers_board } from "./checkers_board.js";
 
 /* IMPORTS */
 
-
-
 /* import checkers_game.js */
 import { checkers_game } from "./checkers_game.js";
+
+/* import checkers_board.js */
+import { checkers_board } from "./checkers_board.js";
 
 
 
