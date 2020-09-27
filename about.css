@@ -1,0 +1,66 @@
+/*
+ * Copyright (C) 2020 Louis Hobson <louis-hobson@hotmail.co.uk>. All Rights Reserved.
+ * 
+ * Distributed under MIT licence as a part of experiments into game-playing AI
+ * For details, see: https://github.com/louishobson/BoardGames/blob/master/LICENSE
+ *
+ * about.css
+ *
+ * styles for about.html
+ *
+ */
+
+
+
+/* set body properties */
+body
+{
+    /* set to have no margin */
+    margin: 0;
+
+    /* set font family */
+    font-family: Arial, Helvetica, sans-serif;
+
+    /* set text to be centred */
+    text-align: center;
+}
+
+
+
+/* header div */
+#about-header-div
+{
+    /* add margin */
+    margin: 4vmin;
+
+    /* set text to be centred */
+    text-align: center;
+
+    /* set font size */
+    font-size: 2vmin;
+}
+
+
+
+/* main content div */
+#about-main-content-div
+{
+    /* two columns */
+    column-count: 2;
+
+    /* margin */
+    margin: 2vmin;
+}
+
+/* rules list */
+#about-rules-list
+{
+    /* tabs for secons line */
+    list-style-position: outside;
+
+    /* stop spilling over */
+    break-inside: avoid-column;
+
+    /* set text to be on the left */
+    text-align: left;
+}
