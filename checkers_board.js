@@ -31,7 +31,7 @@ export class checkers_board
         black_single: 2,
         white_double: 3,
         black_double: 4
-    }
+    };
 
     /* map of piece ids to players */
     static map_piece_id_to_player =
@@ -41,7 +41,7 @@ export class checkers_board
         false,
         true,
         false
-    ]
+    ];
 
     /* map of piece ids to their double counterparts */
     static map_piece_id_to_double_piece =
@@ -51,7 +51,7 @@ export class checkers_board
         4,
         3,
         4
-    ]
+    ];
 
     /* map of piece ids to booleans as to whether they are double pieces */
     static map_piece_id_to_is_double = 

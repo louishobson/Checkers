@@ -63,8 +63,8 @@ export class checkers_game extends checkers_board
     get_win_status ()
     {
         if ( 
-            this.pieces_in_play [ checkers_board.piece_id.white_single ] + this.pieces_in_play [ checkers_board.piece_id.white_double ] != 0 && 
-            this.pieces_in_play [ checkers_board.piece_id.black_single ] + this.pieces_in_play [ checkers_board.piece_id.black_double ] == 0 
+            this.pieces_in_play [ checkers_board.piece_id.black_single ] + this.pieces_in_play [ checkers_board.piece_id.black_double ] == 0 &&
+            this.pieces_in_play [ checkers_board.piece_id.white_single ] + this.pieces_in_play [ checkers_board.piece_id.white_double ] != 0
         ) return true; else
         if ( 
             this.pieces_in_play [ checkers_board.piece_id.white_single ] + this.pieces_in_play [ checkers_board.piece_id.white_double ] == 0 && 
@@ -238,8 +238,8 @@ export class checkers_game extends checkers_board
         /* get piece */
         let piece = this.board_layout [ pos ];
 
-        /* if an empty cell, return */
-        if ( piece == checkers_board.piece_id.empty_cell ) return;
+        /* if an empty cell, return actions */
+        if ( piece == checkers_board.piece_id.empty_cell ) return actions;
 
         /* get player */
         let player = checkers_board.map_piece_id_to_player [ piece ];
@@ -447,10 +447,10 @@ export class checkers_game extends checkers_board
 
 
         /* define constants described above */
-        let S0 = 2, S1 = 3.5, Sp = 0.66;
-        let D0 = 5, D1 = 6, Dp = 0.66;
-        let P0 = 1, P1 = 3;
-        let B0 = 12, Bp = 2.0;
+        const S0 = 2, S1 = 3.5, Sp = 0.66;
+        const D0 = 5, D1 = 6, Dp = 0.66;
+        const P0 = 1, P1 = 3;
+        const B0 = 12, Bp = 2.0;
 
 
 
@@ -496,18 +496,20 @@ export class checkers_game extends checkers_board
                 if ( protection == 2 ) utility += sign * P1;
 
                 /* increment no. of back row pieces if on back row */
-                if (  player && dist_from_back_row == 0 ) ++white_back_row_pieces; else
-                if ( !player && dist_from_back_row == 0 ) ++black_back_row_pieces;
+                if (  player && dist_from_back_row == 0 ) white_back_row_pieces += 0.25; else
+                if ( !player && dist_from_back_row == 0 ) black_back_row_pieces += 0.25;
             } else
             {
+                /* get whether is on an odd row */
+                let odd_row = Math.floor ( pos / 4.0 ) % 2;
+
                 /* is a double piece, so get the distance from the nearest edge */
                 let dist_from_nearest_edge = Math.min 
                 (
-                    /* left */ pos % 4,
-                    /* right */ 3 - ( pos % 4 ),
-                    /* down */ Math.floor ( pos / 4.0 ),
-                    /* up */ 7 - Math.floor ( pos / 4.0 )
+                    /* left */ ( pos % 4 ) * 2 + odd_row, 
+                    /* down */ Math.floor ( pos / 4.0 )
                 );
+                dist_from_nearest_edge = Math.min ( dist_from_nearest_edge, 7 - dist_from_nearest_edge );
 
                 /* apply piece value to board utility */
                 utility += sign * ( D0 + ( D1 - D0 ) * Math.pow ( dist_from_nearest_edge / 3.0, Dp ) );
@@ -515,7 +517,7 @@ export class checkers_game extends checkers_board
         }
 
         /* add both players' back row bonuses */
-        utility += B0 * ( Math.pow ( white_back_row_pieces / 4.0, Bp ) - Math.pow ( black_back_row_pieces / 4.0, Bp ) );
+        utility += B0 * ( Math.pow ( white_back_row_pieces, Bp ) - Math.pow ( black_back_row_pieces, Bp ) );
 
         
 
@@ -552,15 +554,12 @@ export class checkers_game extends checkers_board
         /* set the utility to +- infinity depending on what is the worst possible */
         let utility = ( player ? -Infinity : Infinity )
 
-        /* the index of the action to return */
-        let utility_indices = [ 0 ];
+        /* only define best_actions if should return action */
+        if ( return_action ) var best_actions = [];
 
         /* loop through the actions */
-        for ( let i = 0; i < actions.length; ++i )
+        for ( let action of actions )
         {
-            /* get the action */
-            let action = actions [ i ];
-
             /* apply the action */
             this.apply_action ( action, false );
 
@@ -577,15 +576,15 @@ export class checkers_game extends checkers_board
             /* if the action utility is better than the current utility, reset the utility */
             if ( return_action )
             {
-                if ( ( player && action_utility == utility ) || ( !player && action_utility == utility ) ) utility_indices.push ( i ); else
-                if ( ( player && action_utility >  utility ) || ( !player && action_utility <  utility ) ) { utility = action_utility; utility_indices = [ i ]; }
+                if ( action_utility == utility ) best_actions.push ( action ); else
+                if ( ( player && action_utility >  utility ) || ( !player && action_utility <  utility ) ) { utility = action_utility; best_actions = [ action ]; }
             } else if ( ( player && action_utility >  utility ) || ( !player && action_utility <  utility ) ) utility = action_utility;
 
             /* unapply the action */
             this.unapply_action ( action, false );
 
             /* using alpha or beta, return if the utility means the other player will never choose this route */
-            if ( ( player && utility >= beta ) || ( !player && utility <= alpha ) ) return ( return_action ? actions [ utility_indices [ Math.floor ( Math.random () * utility_indices.length ) ] ] : utility );
+            if ( ( player && utility >= beta ) || ( !player && utility <= alpha ) ) break;
 
             /* set set alpha or beta */
             if ( player ) alpha = Math.max ( alpha, utility );
@@ -593,7 +592,7 @@ export class checkers_game extends checkers_board
         }
 
         /* return the utility/index */
-        return ( return_action ? actions [ utility_indices [ Math.floor ( Math.random () * utility_indices.length ) ] ] : utility );
+        return ( return_action ? best_actions [ Math.floor ( Math.random () * best_actions.length ) ] : utility );
     }
 
 
