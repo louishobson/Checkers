@@ -70,7 +70,7 @@
                     </li>
                     <li>
                         Pieces are moved by yourself by clicking, holding and dragging the piece into it's new position. On your turn, only pieces that can move will be able to be clicked and dragged.
-                        If you are on a mobile device it's possble you will not be able to drag and drop. I am not implementing a workaround.
+                        If you are on a mobile device it's possible you will not be able to drag and drop. I am not implementing a workaround.
                     </li>
                     <li>
                         If your piece reaches the opposite side of the board, it becomes a king and can now move (and capture) in any of the four diagonal directions.
@@ -86,7 +86,7 @@
                         A piece may not multi-capture after a move which resulted it in being kinged: it must wait until the next move to capture.
                     </li>
                     <li>
-                        A player wins if either the other player's pieces are completely irradicated, or the other player is unable to move.
+                        A player wins if either the other player has no pieces left, or the other player is unable to move.
                     </li>
                 </ul>
 
@@ -100,9 +100,9 @@
 
                 <!-- about ai text -->
                 <p id="about-about-ai-text">
-                    The AI is written in pure JavaScript, using the minimax search algorithm with alpha-beta pruning. For the current state, the comptuter player performs a depth-first seach on a tree of board states created from the possible 
+                    The AI is written in pure JavaScript, using the minimax search algorithm with alpha-beta pruning. For the current state, the computer player performs a depth-first search on a tree of board states created from the possible 
                     actions for each player's turn. Terminal nodes are determined wither by a win state, or a depth equal to the "player difficulty". The terminal nodes are assigned a value based on generic checkers strategy, where a high value 
-                    favoues white, and a low favoues black. Parent nodes are assigned the maximum value of the child nodes' values for white's turn, and the minimum for black's turn. After this search has reached back up to the root node, 
+                    favours white, and a low favours black. Parent nodes are assigned the maximum value of the child nodes' values for white's turn, and the minimum for black's turn. After this search has reached back up to the root node, 
                     the computer player will choose the action which leads to the node with the best assigned value (max for white min for black). The alpha-beta part is purely an optimisation which reduces the size of the search tree by 
                     ignoring sections which will never be reached. As a heads up, there is currently no endgame database, so when there are only a few pieces left, it tends to act fairly irrationally.
                 </p>
