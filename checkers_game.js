@@ -48,6 +48,9 @@ export class checkers_game extends checkers_board
     {
         /* call base constructor */
         super ( anchor );
+
+        /* set drag and drop callback on all pieces */
+        for ( let piece of this.board_piece_elements ) piece.ondragstart = this.checkers_piece_dragstart_handler.bind ( this );
     }
 
 
@@ -604,6 +607,9 @@ export class checkers_game extends checkers_board
     /* dragstart callback for piece */
     checkers_piece_dragstart_handler ( ev )
     {
+        /* some browsers don't work with draggable = false, so if this is the case, force stop dragging */
+        if ( !ev.target.draggable ) { ev.preventDefault (); return false; }
+
         /* set data */
         ev.dataTransfer.setData ( "text/plain",  JSON.stringify ( { player: ev.target.checkers_player,  actions: ev.target.checkers_actions, is_promise: ev.target.checkers_is_promise } ) );
     }
@@ -714,9 +720,6 @@ export class checkers_game extends checkers_board
                     this.board_piece_elements [ pos ].checkers_player = player;
                     this.board_piece_elements [ pos ].checkers_actions = [ action ];
                     this.board_piece_elements [ pos ].checkers_is_promise = is_promise;
-
-                    /* dragstart */
-                    this.board_piece_elements [ pos ].ondragstart = this.checkers_piece_dragstart_handler.bind ( this );
                 }
 
                 /* else add action */
