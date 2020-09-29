@@ -27,7 +27,7 @@ import { checkers_board } from "./checkers_board.js";
 
 
 /* the checkers board */
-var game = new checkers_game ( document.getElementById ( "checkers-board-anchor" ) );
+var game = new checkers_game ();
 
 /* the promise chain for playing the game */
 var game_promise;
@@ -208,12 +208,18 @@ function opponent_difficulty_handler ( ev )
 
 
 
-/* SETTING EVENT HANDLERS */
+/* SETTING EVENT HANDLERS AND ANCHORING THE BOARD */
 
+/* only when the window has loaded (required for some browsers) */
+document.addEventListener ( "DOMContentLoaded", () => 
+{
+    /* anchor board */
+    game.anchor_board ( document.getElementById ( "checkers-board-anchor" ) );
 
+    /* set event handlers */
+    document.getElementById ( "checkers-control-stopstart" ).onclick = stopstart_handler;
+    document.getElementById ( "checkers-control-player-select" ).onchange = player_select_handler;
+    document.getElementById ( "checkers-control-oppdifficulty" ).onchange = opponent_difficulty_handler;
+    document.getElementById ( "checkers-control-oppdifficulty" ).oninput = opponent_difficulty_handler;
+} );
 
-/* set event handlers */
-document.getElementById ( "checkers-control-stopstart" ).onclick = stopstart_handler;
-document.getElementById ( "checkers-control-player-select" ).onchange = player_select_handler;
-document.getElementById ( "checkers-control-oppdifficulty" ).onchange = opponent_difficulty_handler;
-document.getElementById ( "checkers-control-oppdifficulty" ).oninput = opponent_difficulty_handler;
