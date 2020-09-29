@@ -110,8 +110,6 @@ function end_of_game ( player )
     /* set end game when possible to false */
     end_game_when_possible = false;
 
-    console.log ( game.pieces_in_play );
-
     /* change text above the board */
     document.getElementById ( "checkers-player-turn" ).innerHTML = ( player == undefined ? "Game ended" : ( player ? "White wins" : "Black wins" ) );
     document.getElementById ( "checkers-player-turn-extra" ).innerHTML = "";
