@@ -211,7 +211,7 @@ function opponent_difficulty_handler ( ev )
 /* SETTING EVENT HANDLERS AND ANCHORING THE BOARD */
 
 /* only when the window has loaded (required for some browsers) */
-document.addEventListener ( "DOMContentLoaded", () => 
+document.addEventListener ( "DOMContentLoaded", ( ev ) => 
 {
     /* anchor board */
     game.anchor_board ( document.getElementById ( "checkers-board-anchor" ) );
