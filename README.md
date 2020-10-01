@@ -8,15 +8,13 @@ Simply clone the master branch into a directory accessible from the web to play 
 
 ## Rules of checkers ##
 
-    Single pieces, or men, (what you begin with) may only move diagonally forwards (white up, black down) into an empty space (so only black cells will ever be occupied).
- *  Pieces are moved by yourself by clicking, holding, and dragging the piece into it's new position. On your turn, only pieces that can legally move will be able to be clicked and dragged.
-    If you are on a mobile device it's possible you will not be able to drag and drop. I am not implementing a workaround.
- *  If your piece reaches the opposite side of the board, it becomes a king and can now move (and capture) in any of the four diagonal directions.
- *  A capture is where a piece jumps over an opposing piece diagonally adjacent to it into an empty cell.
- *  If a capture is possible, it must be taken. If multiple captures are possible, it is your choice which one you chose to make. This is called forced capturing. Kings are not exempt from forced capturing.
- *  If, once a piece has made a capture, it is then possible for it to capture again from its new position, it must capture again. This is called a multi-capture. 
-    A piece may not multi-capture after a move which resulted in it being kinged: it must wait until the next move to capture.
- *  A player wins if either the other player has no pieces left, or the other player is unable to move.
+ * Single pieces, or men, (what you begin with) may only move diagonally forwards (white up, black down) into an empty space (so only black cells will ever be occupied).
+ * Pieces are moved by yourself by clicking, holding, and dragging the piece into it's new position. On your turn, only pieces that can legally move will be able to be clicked and dragged. If you are on a mobile device it's possible you will not be able to drag and drop. I am not implementing a workaround.
+ * If your piece reaches the opposite side of the board, it becomes a king and can now move (and capture) in any of the four diagonal directions.
+ * A capture is where a piece jumps over an opposing piece diagonally adjacent to it into an empty cell.
+ * If a capture is possible, it must be taken. If multiple captures are possible, it is your choice which one you chose to make. This is called forced capturing. Kings are not exempt from forced capturing.
+ * If, once a piece has made a capture, it is then possible for it to capture again from its new position, it must capture again. This is called a multi-capture. A piece may not multi-capture after a move which resulted in it being kinged: it must wait until the next move to capture.
+ * A player wins if either the other player has no pieces left, or the other player is unable to move.
 
 ## About the AI ## 
 
