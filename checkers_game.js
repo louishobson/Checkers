@@ -32,6 +32,11 @@ export class checkers_game extends checkers_board
     user_move_resolve;
     user_move_reject;
 
+    /* list of past moves in order to detect and avoid stalemates
+     * a 'player' attribute is added to the action objects in order to recognise which player made the move more easily 
+     */
+    past_moves;
+
 
 
     /* CONSTRUCTOR */
@@ -51,6 +56,9 @@ export class checkers_game extends checkers_board
 
         /* set drag and drop callback on all pieces */
         for ( let piece of this.board_piece_elements ) piece.ondragstart = this.checkers_piece_dragstart_handler.bind ( this );
+
+        /* set past moves to an empty array */
+        this.past_moves = new Array ();
     }
 
 
@@ -203,6 +211,22 @@ export class checkers_game extends checkers_board
 
         /* return action */
         return action;
+    }
+
+
+    /* compare_actions
+     *
+     * returns true if two actions are equal, false otherwise
+     */
+    compare_actions ( action1, action2 )
+    {
+        if
+        (
+            action1.start_piece == action2.start_piece &&
+            action1.start_pos == action2.start_pos &&
+            action1.end_piece == action2.end_piece &&
+            action1.end_pos == action2.end_pos
+        ) return true; else return false;
     }
 
 
@@ -371,6 +395,68 @@ export class checkers_game extends checkers_board
 
 
 
+    /* remove_repetitive_actions
+     *
+     * takes a set of possible actions and will remove any that would cause a stalemate
+     * for example if black and white keep moving between the same two spaces, this function can be used on the computer player to force a different move
+     * it uses the past_moves member to detect repetition
+     * 
+     * player: the player who's turn it is
+     * actions: the actions to remove repetitive options from
+     * repeats: the maximum number of times the moves can be repeated (min 1, but should really be 2 or more)
+     */
+    remove_repetitive_actions ( player, actions, repeats )
+    {
+        /* return if the size of the array is less than quadruple the no. of repeats */
+        if ( this.past_moves.length < repeats * 4 ) return actions;
+
+        /* if the back of the past moves list is a move for the same player, return without removing any moves */
+        if ( this.past_moves [ this.past_moves.length - 1 ].player == player ) return actions;
+
+        /* check that all the past moves alternate between players */
+        for ( let i = 1; i < repeats * 4; ++i ) if ( this.past_moves [ this.past_moves.length - 1 - i ].player == this.past_moves [ this.past_moves.length - i ] )
+        {
+            /* it was the case that the moves were not alternating
+             * hence we can remove all of the past moves beyond this point
+             */
+            this.past_moves = this.past_moves.slice ( this.past_moves.length - i );
+
+            /* return actions */
+            return actions;
+        }
+
+        /* determine whether the past actions are actually repetitive up to the number of repeats specified 
+         * this only needs to be computed if repeats is geater than 1 
+         */
+        if ( repeats > 1 ) for ( let i = 0; i < 4; ++i ) for ( let j = 1; j < repeats; ++j )
+        {
+            /* check whether the actions are repetitive */
+            if ( !this.compare_actions ( this.past_moves [ this.past_moves.length - 1 - i - j * 4 ], this.past_moves [ this.past_moves.length - 1 - i ] ) )
+            {
+                /* not repetitive, therefore remove all of the past actions before this point */
+                this.past_moves = this.past_moves.slice ( this.past_moves.length - i - j * 4 );
+
+                /* return actions */
+                return actions;
+            }
+        }
+
+        /* loop through the actions supplied to check whether any of them will complete the repetition, and remove them */
+        for ( let i = 0; i < actions.length; ++i )
+        {
+            if ( this.compare_actions (  actions [ i ], this.past_moves [ this.past_moves.length - 4 ] ) )
+            {
+                /* repetition found!
+                 * splice this action out of actions and return the new array
+                 */
+                actions = actions.splice ( i, 1 );
+                return actions;
+            }
+        }
+    } 
+
+
+
     /* ESTIMATE UTILITY */
 
 
@@ -415,7 +501,7 @@ export class checkers_game extends checkers_board
      * 
      * where a full back row gives a bonus of B0, and an empty back row gives no bonus
      * a full back row means that the opposing player can not easily aquire double pieces, which is obviously a good thing for this player
-     * the function should be accelerating (Bp > 1), since the value of keeping a back row quicly deteriorates as pieces leave it
+     * the function should be accelerating (Bp > 1), since the value of keeping a full back row quicky deteriorates as pieces leave it
      * for example, the value of having one single piece on the back row is very small, and it should not be seen as a huge loss to move it forwards, compared to breaking a full back row
      * 
      */
@@ -628,6 +714,10 @@ export class checkers_game extends checkers_board
             /* apply action */
             this.apply_action ( action );
 
+            /* add to past_moves */
+            action.player = piece_data.player;
+            this.past_moves.push ( action );
+
             /* render */
             this.render ();
 
@@ -723,8 +813,9 @@ export class checkers_game extends checkers_board
      * player: boolean for the player to move
      * depth: the depth to apply to minimax
      * actions: the actions the player can perform (or undefined which will calculate them automatically)
+     * max_repeats: the number of repetitions before forcing a different move (defaults to 2)
      */
-    computer_move ( player, depth, actions = undefined )
+    computer_move ( player, depth, actions = undefined, max_repeats = 2 )
     {
         /* render to ensure the board is up to date */
         this.render ();
@@ -741,11 +832,18 @@ export class checkers_game extends checkers_board
         /* loop until break */
         while ( true )
         {
+            /* remove repetitive actions */
+            actions = this.remove_repetitive_actions ( player, actions, max_repeats );
+
             /* find the best move */
             let action = this.minimax_search ( player, actions, depth );
 
             /* make the move */
             this.apply_action ( action );
+
+            /* add to past_moves */
+            action.player = player;
+            this.past_moves.push ( action );
 
             /* if the action was a capture and further moves are possible, loop over, else break */
             if ( action.capture_piece != checkers_board.piece_id.empty_cell && action.further_actions.length != 0 ) actions = action.further_actions;
@@ -800,8 +898,9 @@ export class checkers_game extends checkers_board
      * player: boolean for the player to move
      * depth: the depth to apply to minimax
      * actions: the actions the player can perform (or undefined which will calculate them automatically)
+     * max_repeats: the number of repetitions before forcing a different move (defaults to 2)
      */
-    promise_computer_move ( player, depth, actions = undefined )
+    promise_computer_move ( player, depth, actions = undefined, max_repeats = 2 )
     {
         /* return new promise */
         return new Promise ( ( resolve, reject ) =>
