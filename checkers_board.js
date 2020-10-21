@@ -88,9 +88,6 @@ export class checkers_board
      */
     board_layout;
 
-    /* 1d array of booleans for changes to the board same as in board_layout */
-    board_change;
-
     /* the number of each type of piece on the board (an array of 5 for each piece id) */
     pieces_in_play;
 
@@ -237,7 +234,6 @@ export class checkers_board
     {
         /* set the arrays */
         this.board_layout = new Array ( 32 );
-        this.board_change = new Array ( 32 );
 
         /* loop over to set pieces */
         for ( let pos = 0; pos < 32; ++pos ) 
@@ -250,9 +246,6 @@ export class checkers_board
 
             /* else set to empty */
             else this.board_layout [ pos ] = checkers_board.piece_id.empty_cell;
-
-            /* set change to true */
-            this.board_change [ pos ] = true;
         }
 
         /* set the number of pieces in play, where empty cells are not important and counting them will waste time */
@@ -282,25 +275,22 @@ export class checkers_board
             /* set draggable to false */
             this.board_piece_elements [ pos ].draggable = false;
 
-            /* continue if no change */
-            if ( !this.board_change [ pos ] ) continue;
-
-            /* else set board change to false */
-            this.board_change [ pos ] = false;
-
             /* get the piece id */
             let piece = this.board_layout [ pos ];
 
             /* if no piece should be in the cell, then make the piece inside it hidden */
             if ( piece == checkers_board.piece_id.empty_cell ) 
             {
-                this.board_piece_elements [ pos ].style.visibility = "hidden";
+                if ( this.board_piece_elements [ pos ].style.visibility != "hidden" )
+                    this.board_piece_elements [ pos ].style.visibility = "hidden";
             } else
 
             /* else make it shown and set it to the correct piece type */
             {
-                this.board_piece_elements [ pos ].src = "./checkers_piece_" + piece + ".png";
-                this.board_piece_elements [ pos ].style.visibility = "visible";
+                if ( this.board_piece_elements [ pos ].src != "./checkers_piece_" + piece + ".png" )
+                    this.board_piece_elements [ pos ].src = "./checkers_piece_" + piece + ".png";
+                if ( this.board_piece_elements [ pos ].style.visibility != "visible" )
+                    this.board_piece_elements [ pos ].style.visibility = "visible";
             }
         }
     }

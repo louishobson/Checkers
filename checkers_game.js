@@ -86,9 +86,8 @@ export class checkers_game extends checkers_board
      * apply/unapply an action
      * 
      * action: the action to apply (can be capture or non-capture)
-     * record_change: whether to set the values in this.board_change to truth (defaults to true)
      */
-    apply_action ( action, record_change = true )
+    apply_action ( action )
     {
         /* modify start and end pieces */
         this.board_layout [ action.start_pos ] = checkers_board.piece_id.empty_cell;
@@ -98,27 +97,17 @@ export class checkers_game extends checkers_board
         --this.pieces_in_play [ action.start_piece ];
         ++this.pieces_in_play [ action.end_piece ];
 
-        /* record change */
-        if ( record_change )
-        {
-            this.board_change [ action.start_pos ] = true;
-            this.board_change [ action.end_pos ] = true;
-        }
-
         /* make extra change if is a capture move */
         if ( action.capture_piece != checkers_board.piece_id.empty_cell )
         {
             /* modify the board */
             this.board_layout [ action.capture_pos ] = checkers_board.piece_id.empty_cell;
-
-            /* record change if required */
-            if ( record_change ) this.board_change [ action.capture_pos ] = true;
             
             /* modify pieces in play */
             --this.pieces_in_play [ action.capture_piece ];
         }
     }
-    unapply_action ( action, record_change = true )
+    unapply_action ( action )
     {
         /* modify start and end pieces */
         this.board_layout [ action.start_pos ] = action.start_piece;
@@ -128,21 +117,11 @@ export class checkers_game extends checkers_board
         ++this.pieces_in_play [ action.start_piece ];
         --this.pieces_in_play [ action.end_piece ];
 
-        /* record change */
-        if ( record_change )
-        {
-            this.board_change [ action.start_pos ] = true;
-            this.board_change [ action.end_pos ] = true;
-        }
-
         /* make extra change if is a capture move */
         if ( action.capture_piece != checkers_board.piece_id.empty_cell )
         {
             /* modify the board */
             this.board_layout [ action.capture_pos ] = action.capture_piece;
-
-            /* record change if required */
-            if ( record_change ) this.board_change [ action.capture_pos ] = true;
             
             /* modify pieces in play */
             ++this.pieces_in_play [ action.capture_piece ];
@@ -217,9 +196,9 @@ export class checkers_game extends checkers_board
         /* set further_actions only if did not just become a king */
         if ( action.start_piece == action.end_piece )
         {
-            this.apply_action ( action, false );
+            this.apply_action ( action );
             this.get_piece_actions ( end_pos, action.further_actions, true );
-            this.unapply_action ( action, false );
+            this.unapply_action ( action );
         }
 
         /* return action */
@@ -564,7 +543,7 @@ export class checkers_game extends checkers_board
         for ( let action of actions )
         {
             /* apply the action */
-            this.apply_action ( action, false );
+            this.apply_action ( action );
 
             /* the utility of the action */
             let action_utility;
@@ -584,7 +563,7 @@ export class checkers_game extends checkers_board
             } else if ( ( player && action_utility >  utility ) || ( !player && action_utility <  utility ) ) utility = action_utility;
 
             /* unapply the action */
-            this.unapply_action ( action, false );
+            this.unapply_action ( action );
 
             /* using alpha or beta, return if the utility means the other player will never choose this route */
             if ( ( player && utility >= beta ) || ( !player && utility <= alpha ) ) break;
@@ -686,8 +665,8 @@ export class checkers_game extends checkers_board
      * will immediately return !player if there is no availible move, otherwise will return undefined
      * 
      * player: boolean for the player the user should control
-     * actions: the actions the player should be able to perform (defaults to undefined which means the actions will be found from this.get_player_actions ( player ))
-     * is_promise: whether at the end of the turn a promise should be resolved
+     * actions: the actions the player should be able to perform (or undefined which will calculate them automatically)
+     * is_promise: whether at the end of the turn a promise should be resolved (which will alter the behavior of drag and drop event handlers)
      */
     user_move ( player, actions = undefined, is_promise = false )
     {
