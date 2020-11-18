@@ -449,7 +449,7 @@ export class checkers_game extends checkers_board
                 /* repetition found!
                  * splice this action out of actions and return the new array
                  */
-                actions = actions.splice ( i, 1 );
+                actions.splice ( i, 1 );
                 return actions;
             }
         }
